@@ -22,7 +22,6 @@ class ShoppingList extends Component {
 
   handleDeleteItem = id => {
     axios.delete(`/items/${id}`).then(res => {
-      console.log(res.data.item);
       if (res.data.success)
         this.setState({
           items: this.state.items.filter(item => item._id !== res.data.item._id)
@@ -60,7 +59,6 @@ class ShoppingList extends Component {
           </Button>
 
           <ListGroup>
-            {console.log({ items213: items })}
             {items.map(({ _id, name }) => (
               <ShoppingListItem
                 key={_id}
