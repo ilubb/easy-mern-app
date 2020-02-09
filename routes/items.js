@@ -4,7 +4,8 @@ const Item = require("../models/Item");
 router.get("/", (req, res) => {
   Item.find()
     .sort({ date: -1 })
-    .then(items => res.json(items));
+    .then(items => res.json(items))
+    .catch(err => res.status(404).json(err));
 });
 
 router.post("/", (req, res) => {
