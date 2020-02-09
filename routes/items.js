@@ -1,9 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
 const Item = require("../models/Item");
-
-// Разве ТУТ ДОЛЖНЫ БЫТЬ ЗАПРОСЫ В ДБ??????????????????
 router.get("/", (req, res) => {
   Item.find()
     .sort({ date: -1 })
