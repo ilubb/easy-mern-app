@@ -1,57 +1,80 @@
+import axios from "axios";
 import React, { Component } from "react";
-import { Container, ListGroup, ListGroupItem, Button } from "reactstrap";
-import uuid from "uuid";
+import { Container, ListGroup, Button } from "reactstrap";
 import ShoppingListItem from "./ShoppingListItem";
 
 class ShoppingList extends Component {
-  state = {
-    items: [
-      { id: uuid(), name: "Name1" },
-      { id: uuid(), name: "Name2" },
-      { id: uuid(), name: "Name3" },
-      { id: uuid(), name: "Name4" },
-      { id: uuid(), name: "Name5" },
-      { id: uuid(), name: "Name6" }
-    ]
-  };
+  state = { items: [], isDataFetched: false };
+
+  componentDidMount() {
+    axios.get("/items").then(res => {
+      if (res.data.success)
+        this.setState({
+          items: res.data.items,
+          isDataFetched: true
+        });
+      else
+        alert(
+          "Приносим свои извенения, но произошла при загрузке данных произошла ошибка!"
+        );
+    });
+  }
 
   handleDeleteItem = id => {
-    this.setState({
-      items: this.state.items.filter(item => item.id !== id)
+    axios.delete(`/items/${id}`).then(res => {
+      console.log(res.data.item);
+      if (res.data.success)
+        this.setState({
+          items: this.state.items.filter(item => item._id !== res.data.item._id)
+        });
+      else
+        alert(
+          "Приносим свои извенения, но при удалении данных произошла ошибка!"
+        );
     });
   };
 
   render() {
-    const { items } = this.state;
-    return (
-      <Container>
-        <Button
-          color="dark"
-          className="m-3"
-          onClick={() => {
-            const name = prompt("Введите название");
-            if (name) {
-              this.setState(state => ({
-                items: [...state.items, { id: uuid(), name }]
-              }));
-            }
-          }}
-        >
-          Добавить
-        </Button>
+    if (this.state.isDataFetched) {
+      const { items } = this.state;
+      return (
+        <Container>
+          <Button
+            color="dark"
+            className="m-3"
+            onClick={() => {
+              const name = prompt("Введите название");
+              if (name) {
+                axios.post("/items", { name }).then(res => {
+                  if (res.data.success)
+                    this.setState({ items: [...items, res.data.item] });
+                  else
+                    alert(
+                      "Приносим свои извенения, но при добавлении данных произошла ошибка!"
+                    );
+                });
+              }
+            }}
+          >
+            Добавить
+          </Button>
 
-        <ListGroup>
-          {items.map(({ id, name }) => (
-            <ShoppingListItem
-              key={id}
-              id={id}
-              name={name}
-              onDelete={this.handleDeleteItem}
-            />
-          ))}
-        </ListGroup>
-      </Container>
-    );
+          <ListGroup>
+            {console.log({ items213: items })}
+            {items.map(({ _id, name }) => (
+              <ShoppingListItem
+                key={_id}
+                id={_id}
+                name={name}
+                onDelete={this.handleDeleteItem}
+              />
+            ))}
+          </ListGroup>
+        </Container>
+      );
+    } else {
+      return <p>Data Loading</p>;
+    }
   }
 }
 
