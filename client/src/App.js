@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AppNavBar from "./components/AppNavBar";
+import ShoppingList from "./components/ShoppingList";
 
 class App extends Component {
   state = {};
@@ -8,7 +9,7 @@ class App extends Component {
     return (
       <div className="App">
         <AppNavBar></AppNavBar>
-        <h1>Hello world</h1>
+        <ShoppingList></ShoppingList>
       </div>
     );
   }
