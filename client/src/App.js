@@ -4,7 +4,6 @@ import AppNavBar from "./components/AppNavBar";
 import ShoppingList from "./components/ShoppingList";
 
 class App extends Component {
-  state = {};
   render() {
     return (
       <div className="App">
