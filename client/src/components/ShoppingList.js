@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { Component } from "react";
-import { Container, ListGroup, Button } from "reactstrap";
+import { Container, ListGroup } from "reactstrap";
 import ShoppingListItem from "./ShoppingListItem";
 import AddItemModal from "./AddItemModal";
 
