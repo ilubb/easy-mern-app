@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { Component } from "react";
 import { Container, ListGroup, Button } from "reactstrap";
 import ShoppingListItem from "./ShoppingListItem";
+import AddItemModal from "./AddItemModal";
 
 class ShoppingList extends Component {
   state = { items: [], isDataFetched: false };
@@ -33,31 +34,25 @@ class ShoppingList extends Component {
     });
   };
 
+  handleAddItem = name => {
+    if (name) {
+      axios.post("/items", { name }).then(res => {
+        if (res.data.success)
+          this.setState({ items: [...this.state.items, res.data.item] });
+        else
+          alert(
+            "Приносим свои извенения, но при добавлении данных произошла ошибка!"
+          );
+      });
+    }
+  };
+
   render() {
     if (this.state.isDataFetched) {
       const { items } = this.state;
       return (
         <Container>
-          <Button
-            color="dark"
-            className="m-3"
-            onClick={() => {
-              const name = prompt("Введите название");
-              if (name) {
-                axios.post("/items", { name }).then(res => {
-                  if (res.data.success)
-                    this.setState({ items: [...items, res.data.item] });
-                  else
-                    alert(
-                      "Приносим свои извенения, но при добавлении данных произошла ошибка!"
-                    );
-                });
-              }
-            }}
-          >
-            Добавить
-          </Button>
-
+          <AddItemModal onAddItem={this.handleAddItem} />
           <ListGroup>
             {items.map(({ _id, name }) => (
               <ShoppingListItem
