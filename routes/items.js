@@ -4,8 +4,8 @@ const Item = require("../models/Item");
 router.get("/", (req, res) => {
   Item.find()
     .sort({ date: -1 })
-    .then(items => res.json(items))
-    .catch(err => res.status(404).json(err));
+    .then(items => res.json({ success: true, items }))
+    .catch(err => res.status(404).json({ success: false, err }));
 });
 
 router.post("/", (req, res) => {
@@ -15,14 +15,16 @@ router.post("/", (req, res) => {
 
   newItem
     .save()
-    .then(item => res.json(item))
-    .catch(err => res.status(404).json(err));
+    .then(item => res.json({ success: true, item }))
+    .catch(err => res.status(404).json({ success: false, err }));
 });
 
 router.delete("/:id", (req, res) => {
   Item.findById(req.params.id)
-    .then(item => item.remove().then(item => res.json({ success: true })))
-    .catch(err => res.status(404).json({ success: false }));
+    .then(item => {
+      if (item) item.remove().then(item => res.json({ item, success: true }));
+    })
+    .catch(err => res.status(404).json({ success: false, err }));
 });
 
 module.exports = router;
