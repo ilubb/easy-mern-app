@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { Component } from "react";
-import { Container, ListGroup } from "reactstrap";
+import { Container, ListGroup, Spinner, Col, Row } from "reactstrap";
 import ShoppingListItem from "./ShoppingListItem";
 import AddItemModal from "./AddItemModal";
 
@@ -66,7 +66,17 @@ class ShoppingList extends Component {
         </Container>
       );
     } else {
-      return <p>Data Loading</p>;
+      return (
+        <Container>
+          <Row>
+            <Col size="mx-auto">
+              <div className="text-center">
+                <Spinner color="primary" />
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      );
     }
   }
 }
